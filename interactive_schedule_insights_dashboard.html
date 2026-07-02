@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KCD Kuala Lumpur 2026 Schedule & Session Inspector</title>
+    <!-- Tailwind CSS for modern responsive utility design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Material Icons & Google Sans Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&family=Google+Sans+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Google Sans', sans-serif;
+            background-color: #0f172a; /* Rich dark slate */
+            color: #f1f5f9;
+        }
+        .code-font {
+            font-family: 'Google Sans Mono', monospace;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <!-- Header Section -->
+    <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 shrink-0 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 text-xs font-bold bg-blue-500/20 text-blue-400 rounded-full border border-blue-500/30">June 27, 2026</span>
+                <span class="text-xs text-slate-400">Official PWA Schedule Compiled</span>
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+                <span class="material-icons text-blue-500">dashboard</span> KCD Kuala Lumpur 2026 Schedule & Insights
+            </h1>
+        </div>
+
+        <!-- Global Interactive Controls -->
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <!-- Search field -->
+            <div class="relative w-full sm:w-64">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                    <span class="material-icons text-sm">search</span>
+                </span>
+                <input type="text" id="searchInput" placeholder="Search speaker, topic, stack..." 
+                    class="w-full pl-9 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+            </div>
+
+            <!-- Filter Options -->
+            <select id="trackFilter" class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer">
+                <option value="All">All Parallel Tracks</option>
+                <option value="Track 1">Track 1 Focus Only</option>
+                <option value="Track 2">Track 2 Focus Only</option>
+                <option value="Track 3">Track 3 Focus Only</option>
+            </select>
+
+            <select id="levelFilter" class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer">
+                <option value="All">All Skill Levels</option>
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0 bg-slate-950">
+        
+        <!-- Left Pane: Timeline View -->
+        <section class="flex-1 overflow-y-auto p-4 lg:p-6 min-h-0" id="schedule-pane">
+            <div class="max-w-4xl mx-auto space-y-6">
+                
+                <!-- Common Area Events (Static Header-like Sessions) -->
+                <div class="border-l-2 border-slate-700 pl-4 space-y-3 py-2 bg-slate-900/40 rounded-r-lg p-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between text-slate-400 gap-1 text-sm">
+                        <span class="font-bold flex items-center gap-1"><span class="material-icons text-sm text-slate-500">schedule</span> 08:30 AM (60 min)</span>
+                        <span class="text-xs uppercase tracking-wider bg-slate-800 px-2 py-0.5 rounded text-slate-300 w-fit">Registration & Welcome Warmup</span>
+                    </div>
+                    <h3 class="text-base font-semibold text-slate-300">Registration & Sponsor Booth Introductions</h3>
+                    <p class="text-xs text-slate-400">Pick up dynamic attendee badge and schedule maps at the registration desk (Common Area).</p>
+                </div>
+
+                <div class="border-l-2 border-blue-500 pl-4 space-y-2 py-2 bg-blue-950/20 rounded-r-lg p-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between text-slate-400 gap-1 text-sm">
+                        <span class="font-bold flex items-center gap-1 text-blue-400"><span class="material-icons text-sm">campaign</span> 09:30 AM (45 min)</span>
+                        <span class="text-xs uppercase tracking-wider bg-blue-900/30 text-blue-300 px-2 py-0.5 rounded w-fit">Main Hall</span>
+                    </div>
+                    <h3 class="text-base font-bold text-white">Opening + Keynote Session</h3>
+                    <p class="text-xs text-slate-300">Welcome addresses by CNCF Kuala Lumpur organizers, setting expectations for the multi-track layout.</p>
+                </div>
+
+                <!-- Interactive Comparative Timeline Container -->
+                <div class="mt-8">
+                    <h2 class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-4 flex items-center gap-2">
+                        <span class="material-icons text-sm text-slate-400">dns</span> Parallel Technical Tracks (10:45 AM - 05:00 PM)
+                    </h2>
+                    <div class="space-y-4" id="timelineContainer">
+                        <!-- Dynamic timeline blocks will inject here -->
+                    </div>
+                </div>
+
+                <!-- Closing Session -->
+                <div class="border-l-2 border-amber-500 pl-4 space-y-2 py-2 bg-amber-950/20 rounded-r-lg p-3 mt-8">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between text-slate-400 gap-1 text-sm">
+                        <span class="font-bold flex items-center gap-1 text-amber-400"><span class="material-icons text-sm">emoji_events</span> 05:30 PM (30 min)</span>
+                        <span class="text-xs uppercase tracking-wider bg-amber-900/30 text-amber-300 px-2 py-0.5 rounded w-fit">Main Hall</span>
+                    </div>
+                    <h3 class="text-base font-bold text-white">Closing Ceremony & Community Giveaways</h3>
+                    <p class="text-xs text-slate-300">Final organizer recap, community prize draws, and standard sponsor gift announcements.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Right Pane: Session Detail & Architecture Inspector -->
+        <aside class="w-full lg:w-[480px] border-t lg:border-t-0 lg:border-l border-slate-800 bg-slate-900 overflow-y-auto flex flex-col shrink-0" id="inspector-pane">
+            
+            <!-- Default Idle State (Shown when no session is selected) -->
+            <div id="inspector-idle" class="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-500">
+                <span class="material-icons text-6xl mb-4 text-slate-700 animate-pulse">explore</span>
+                <h3 class="text-lg font-medium text-slate-400 mb-2">Architectural Session Inspector</h3>
+                <p class="text-xs text-slate-500 max-w-sm">
+                    Select any parallel session card on the timeline to generate structural system blueprints, core insights, and technical takeaways.
+                </p>
+            </div>
+
+            <!-- Active Inspector Card Details -->
+            <div id="inspector-content" class="hidden flex-1 flex flex-col h-full min-h-0">
+                <div class="p-6 border-b border-slate-800">
+                    <div class="flex items-center justify-between mb-3">
+                        <span id="insTrackBadge" class="px-2.5 py-1 text-xs font-bold rounded-full"></span>
+                        <span id="insLevelBadge" class="px-2.5 py-1 text-xs font-bold rounded-lg border"></span>
+                    </div>
+                    <h2 id="insTitle" class="text-lg font-bold text-white leading-snug mb-2"></h2>
+                    <p id="insSpeaker" class="text-sm text-blue-400 font-medium flex items-center gap-1 mb-3">
+                        <span class="material-icons text-sm">person</span> 
+                    </p>
+                    <div class="flex flex-wrap gap-2 text-xs text-slate-400">
+                        <span class="flex items-center gap-1 bg-slate-850 px-2 py-1 rounded"><span class="material-icons text-xs">schedule</span> <span id="insTime"></span></span>
+                        <span class="flex items-center gap-1 bg-slate-850 px-2 py-1 rounded"><span class="material-icons text-xs">label</span> <span id="insCategory"></span></span>
+                    </div>
+                </div>
+
+                <!-- Architecture & Insight Details -->
+                <div class="flex-1 p-6 space-y-6 overflow-y-auto">
+                    <!-- Session abstract -->
+                    <div class="space-y-2">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Session Overview</h4>
+                        <p id="insAbstract" class="text-sm text-slate-300 leading-relaxed bg-slate-950 p-3 rounded-lg border border-slate-800"></p>
+                    </div>
+
+                    <!-- Visual Tech Stack Architecture Flow -->
+                    <div class="space-y-3">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                            <span class="material-icons text-xs text-slate-400">architecture</span> Dynamic Architectural Topology
+                        </h4>
+                        <!-- Dynamic Blueprint Graph container -->
+                        <div id="insBlueprint" class="bg-slate-950 rounded-lg p-4 border border-slate-800 flex flex-col items-center justify-center min-h-[140px] relative overflow-hidden">
+                            <!-- Visual mapping will go here dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Insights & Core Takeaways -->
+                    <div class="space-y-3">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Key Engineering Takeaways</h4>
+                        <ul id="insInsights" class="space-y-2.5 text-sm text-slate-300">
+                            <!-- Injected dynamically -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+    </main>
+
+    <!-- Data & State Processing Engine -->
+    <script>
+        const SESSIONS = {
+            // 10:45 AM
+            "t1_1045": {
+                time: "10:45 AM",
+                track: "Track 1",
+                title: "DevOps Didn't Scale — Platform Engineering Did: Lessons from Building an IDP",
+                speaker: "Lokesh Jain (Electrolux)",
+                category: "Platform Engineering",
+                level: "Beginner",
+                abstract: "DevOps promised extreme velocity but often shifted cognitive overload straight onto product developers. Discover how Platform Engineering resolves this using Internal Developer Platforms (IDPs) to build safe golden paths.",
+                insights: [
+                    "<strong>Platform-as-a-Product:</strong> Successful platforms are run with dedicated product managers focusing exclusively on simplifying developers' workflows.",
+                    "<strong>Self-Service Golden Paths:</strong> Instead of writing raw Kubernetes YAML files, devs use clean API-driven templates to deploy microservices securely.",
+                    "<strong>Standardizing Tooling:</strong> Unifies security guardrails, cost-tracking controls, and CI configurations invisibly behind the scenes."
+                ],
+                techStack: ["Backstage", "Crossplane", "Kubernetes", "ArgoCD"],
+                flow: ["Developer", "Internal Developer Portal (IDP)", "Unified Control Plane", "Ephemeral Clusters"]
+            },
+            "t2_1045": {
+                time: "10:45 AM",
+                track: "Track 2",
+                title: "[Sponsored] NGINX for Agentic Observability and MCP Traffic Monitoring",
+                speaker: "Aminul I. Tareq (F5)",
+                category: "Observability",
+                level: "Intermediate",
+                abstract: "Delve into the system mechanics of optimizing Layer-7 observability within microservices coordinating Model Context Protocol (MCP) data for Agentic AI execution nodes.",
+                insights: [
+                    "<strong>MCP Context Routing:</strong> AI Agent context sharing demands sub-millisecond, structured, context-preserving routing patterns.",
+                    "<strong>Deep L7 Observability:</strong> How to monitor agentic interaction loops without adding latency or violating cryptographic trust lines.",
+                    "<strong>Traffic Resiliency:</strong> Implementing custom request-response tracking at the edge layer specifically for asynchronous LLM payloads."
+                ],
+                techStack: ["NGINX Ingress", "MCP Protocol", "OpenTelemetry", "AI Agents"],
+                flow: ["AI Agent Client", "MCP Traffic Gateway", "Telemetry Collector", "Target LLM Service"]
+            },
+            "t3_1045": {
+                time: "10:45 AM",
+                track: "Track 3",
+                title: "Self-Managed Sovereign Storage: Running Production Ceph on K8s with Rook",
+                speaker: "Arun Kumar (Nimbus Cloud)",
+                category: "Data Processing + Storage",
+                level: "Advanced",
+                abstract: "A high-performance blueprint for engineering robust, self-managed storage in localized sovereign cloud environments using Ceph clustered via the Rook operator in Kubernetes.",
+                insights: [
+                    "<strong>Decoupling Public Cloud:</strong> Overcome storage lock-in risks by running robust hyperconverged block, object, and file storage internally.",
+                    "<strong>Rook Operator Automation:</strong> Fully automates orchestration, health check loops, node expansions, and failovers within storage namespaces.",
+                    "<strong>Hardware Performance Mapping:</strong> Implementing NVMe tiering and optimizing CRUSH maps directly to raw disk configurations."
+                ],
+                techStack: ["Rook Operator", "Ceph Daemon", "CSI Plugin", "Direct NVMe Storage"],
+                flow: ["K8s StatefulSet pod", "Container Storage Interface (CSI)", "Rook/Ceph Daemon", "Bare-Metal NVMe Disk"]
+            },
+            // 11:15 AM
+            "t1_1115": {
+                time: "11:15 AM",
+                track: "Track 1",
+                title: "The Ephemeral Scale: Managing 10k K8s Clusters a Day",
+                speaker: "Abhinav Sharma (KodeKloud)",
+                category: "Platform Engineering",
+                level: "Beginner",
+                abstract: "Explore the internal site reliability engineering strategy used to automatically spin up, manage, and tear down over 10,000 parallel Kubernetes control planes daily to handle sandboxed sandpit sandboxes.",
+                insights: [
+                    "<strong>Cluster API (CAPI):</strong> Automates full cluster creation lifecycles using unified declarative infrastructure manifests.",
+                    "<strong>Garbage Collection Engine:</strong> Built aggressive monitoring lifecycles that detect and automatically reap stale, orphaned developer sandboxes.",
+                    "<strong>Control Plane Optimization:</strong> Leveraging lightweight distributions (K3s and vcluster) to drastically reduce startup latency down to mere seconds."
+                ],
+                techStack: ["Cluster API", "K3s", "vcluster", "Prometheus Operators"],
+                flow: ["Scheduling Queue", "Cluster API Control", "Virtual K8s Control Plane", "Sandbox Workspace"]
+            },
+            "t2_1115": {
+                time: "11:15 AM",
+                track: "Track 2",
+                title: "The Hard Way: Building a Kernel Module for Kubernetes Monitoring Without eBPF",
+                speaker: "Irwan Shofwan & Adam Rozaq Sobari (GoTo Financial / Asaren.ai)",
+                category: "Observability",
+                level: "Intermediate",
+                abstract: "Go deep into host system architecture and trace the internal mechanics of system calls by building a dedicated lightweight tracing module directly in the Linux Kernel space.",
+                insights: [
+                    "<strong>Linux Tracepoints:</strong> Intercepting crucial kernel operations at runtime without incurring the compilation complexities of standard eBPF compiler suites.",
+                    "<strong>Ring Buffers in Kernel Space:</strong> Structuring data-passing loops to share telemetry instantly to user-space monitoring daemons.",
+                    "<strong>LSM & System Stability:</strong> Safeguarding multi-tenant host nodes against trace-induced driver failures or panics."
+                ],
+                techStack: ["Custom Linux Kernel Driver", "Tracepoints", "LSM Hooks", "Ring Buffers"],
+                flow: ["K8s Pod Event", "Host Syscall Hook", "Kernel Tracing Driver", "User-Space Telemetry Collector"]
+            },
+            "t3_1115": {
+                time: "11:15 AM",
+                track: "Track 3",
+                title: "[Sponsored] Gateway API's Inference Extension: Smarter Routing for Stateful Workloads",
+                speaker: "Junwei Chan (F5)",
+                category: "AI/ML",
+                level: "Intermediate",
+                abstract: "Get a comprehensive look at the emerging CNCF Gateway API Inference Extension, customized to route LLM workloads based on GPU state, queue size, and key parameters.",
+                insights: [
+                    "<strong>Model-Aware Routing:</strong> Intelligently directing inference queries to LLM replicas based on real-time hardware queue lengths.",
+                    "<strong>Dynamic Rate Limits:</strong> Adapting traffic patterns on-the-fly to prevent GPU memory depletion or request dropouts.",
+                    "<strong>Inference Standardization:</strong> Using standard upstream API objects to control complex context routing schemas."
+                ],
+                techStack: ["Gateway API", "Inference Extension", "KServe", "Envoy Proxy Engine"],
+                flow: ["Client Request", "Gateway API Controller", "GPU-Aware Load Balancer", "Target LLM Pod"]
+            },
+            // 11:45 AM
+            "t1_1145": {
+                time: "11:45 AM",
+                track: "Track 1",
+                title: "Unified Policy for Traffic with Kyverno & Gateway API",
+                speaker: "Anmol Krishan Sachdeva & Ankit Kotnala (Google)",
+                category: "Connectivity",
+                level: "Intermediate",
+                abstract: "Unify external ingress (North-South) and internal service-to-service communication (East-West) configurations by combining the safety of Gateway API with declarative Kyverno policy definitions.",
+                insights: [
+                    "<strong>Unified API:</strong> Merges legacy ingress and mesh configurations into highly scalable HTTPRoute structures.",
+                    "<strong>Policy Enforcement:</strong> Kyverno validating ingress configurations instantly to prevent cross-tenant collisions and ports exposure.",
+                    "<strong>Autogen Routings:</strong> Dynamically generate network routes matching strict security templates whenever a new app service is created."
+                ],
+                techStack: ["Kyverno Policy Engine", "Gateway API", "Istio Mesh Integration", "CI GitOps Validators"],
+                flow: ["Developer Git Commit", "Kyverno Validation Webhook", "Gateway API Controller", "Secure Network Route"]
+            },
+            "t3_1145": {
+                time: "11:45 AM",
+                track: "Track 3",
+                title: "From Legacy to Cloud Native: Can University Infrastructure Run on K8s? (Lessons from UTHM)",
+                speaker: "M. Farhan Sjaugi & Mohd Kasni Kasbullah (Birunisoft / UTHM)",
+                category: "Operations + Performance",
+                level: "Beginner",
+                abstract: "A highly practical migration report highlighting how Universiti Tun Hussein Onn Malaysia successfully consolidated legacy student portals and administrative databases onto a resilient Kubernetes architecture.",
+                insights: [
+                    "<strong>Workload Refactoring:</strong> Successfully packaging monolith systems into lightweight, scalable stateless containers.",
+                    "<strong>Hardware Consolidation:</strong> Replacing costly VM footprints with a highly packed, bare-metal Kubernetes cluster.",
+                    "<strong>GitOps Adoption:</strong> Training infrastructure administrators to manage production deployments purely via structured Git repositories."
+                ],
+                techStack: ["K3s / Rancher", "Harbor Registry", "ArgoCD", "HAProxy"],
+                flow: ["Student User", "HAProxy Load Balancer", "K3s Worker Node", "Postgres Core DB"]
+            },
+            // 01:30 PM
+            "t1_0130": {
+                time: "01:30 PM",
+                track: "Track 1",
+                title: "Giving AI Agents Secure Sandbox with Real-World Tools: OpenClaw in Kubernetes with MicroVM",
+                speaker: "Eng-Hwa Tan (AWS)",
+                category: "Security",
+                level: "Intermediate",
+                abstract: "Running untrusted code execution tasks generated by AI agents demands secure, isolated, and highly ephemeral compute boxes. Learn how AWS and OpenClaw implement this using Firecracker microVMs on K8s.",
+                insights: [
+                    "<strong>Hypervisor Isolation:</strong> Instantly boot lightweight Firecracker microVMs in under 100ms to parse arbitrary terminal scripts.",
+                    "<strong>Zero Shared State:</strong> Ensuring absolute breakout protection so compromised agent sandboxes can never inspect host file layers.",
+                    "<strong>Dynamic Outbound Controls:</strong> Restricting standard internet access dynamically while allowing targeted tool call API endpoints."
+                ],
+                techStack: ["Firecracker microVM", "Kata Containers", "OpenClaw SDK", "NetworkPolicies"],
+                flow: ["LLM Tool Call", "OpenClaw Executor", "Firecracker Container", "Sandbox MicroVM Environment"]
+            },
+            "t2_0130": {
+                time: "01:30 PM",
+                track: "Track 2",
+                title: "Cloud Native Automation with Drasi's Continuous Queries",
+                speaker: "Sujay Pillai (Microsoft)",
+                category: "Application Development",
+                level: "Intermediate",
+                abstract: "Explore the newly open-sourced Drasi data change processing framework. Query active stream logs and dynamically trigger self-healing actions instantly when issues pop up.",
+                insights: [
+                    "<strong>Continuous Streaming Queries:</strong> Track ongoing databases and event logs in real-time, matching states with simple query structures.",
+                    "<strong>Self-Healing Orchestration:</strong> Trigger programmatic remediation loops directly from active trace analysis outputs.",
+                    "<strong>Decoupled Architecture:</strong> Decouple data extraction processes cleanly from resource-heavy standard batch storage routines."
+                ],
+                techStack: ["Drasi Engine", "Apache Kafka", "Kubernetes Operator", "CDC Adapters"],
+                flow: ["Application State Event", "Kafka Data Feed", "Drasi Query Analyzer", "Self-Healing Controller"]
+            },
+            "t3_0130": {
+                time: "01:30 PM",
+                track: "Track 3",
+                title: "Apps Simplified: Use a Mesh from Day 0",
+                speaker: "Ivan Porta (Todea)",
+                category: "Operations + Performance",
+                level: "Beginner",
+                abstract: "Architectural arguments demonstrating why embedding a mutual TLS service mesh early in development prevents long-term refactoring pain, showing how modern meshes run light.",
+                insights: [
+                    "<strong>Abstracting Security:</strong> Move cryptographic validation, retry strategies, and trace headers out of application code.",
+                    "<strong>Istio Ambient Mode:</strong> Gain mTLS security and connection policies without injecting resource-heavy sidecars inside every pod.",
+                    "<strong>Zero-Trust Defaulting:</strong> Ensure secure end-to-end communication pathways from local developer sandboxes up to cloud clusters."
+                ],
+                techStack: ["Istio Ambient Mode", "Linkerd Mesh", "OpenTelemetry Collector", "K8s Network Policies"],
+                flow: ["App Container pod", "Host Node proxy (ztunnel)", "Direct mTLS Wire", "Target App Node proxy"]
+            },
+            // 02:00 PM
+            "t1_0200": {
+                time: "02:00 PM",
+                track: "Track 1",
+                title: "[Sponsored] Agentic AI Is a Cloud Native Systems Problem",
+                speaker: "Maruthi Lokanathan (ClickHouse)",
+                category: "AI/ML",
+                level: "Intermediate",
+                abstract: "Deploying interactive multi-agent systems poses a classic distributed systems challenge. Explore ClickHouse patterns to handle heavy real-time analytics, vector lookups, and session management.",
+                insights: [
+                    "<strong>Telemetry Storage:</strong> Agent systems output immense interaction tracks. ClickHouse processes millions of tracking lines per second cheaply.",
+                    "<strong>Vector Search Synergy:</strong> Keeping agent history tracking and spatial index searches unified within a single DB cluster.",
+                    "<strong>Latency Mitigation:</strong> Architecting real-time databases to prevent latency bottlenecks in interactive loops."
+                ],
+                techStack: ["ClickHouse Database", "Vector Index Extension", "Kubernetes Clusters", "LangGraph SDK"],
+                flow: ["Multi-Agent Loop", "FastAPI Service", "ClickHouse Real-time Analytics", "Vector Similarity Index"]
+            },
+            "t2_0200": {
+                time: "02:00 PM",
+                track: "Track 2",
+                title: "Run PostgreSQL on Kubernetes in Production with CloudNativePG",
+                speaker: "Jirayut Nimsaeng (Opsta)",
+                category: "Data Processing + Storage",
+                level: "Intermediate",
+                abstract: "Unlock high availability, backup schedules, and point-in-time recovery configurations for production database workloads running in Kubernetes using CloudNativePG.",
+                insights: [
+                    "<strong>Native Declarative Postgres:</strong> Defines high availability primary-replica configurations cleanly as standard custom resources.",
+                    "<strong>Automated Failover Loops:</strong> Active monitoring daemons perform safe and rapid switchovers under 10 seconds if a database master fails.",
+                    "<strong>Object Storage Backups:</strong> Integration with Barman to push backups and continuous WAL archiving into local object storage."
+                ],
+                techStack: ["CloudNativePG", "PostgreSQL Core", "S3 / MinIO Storage", "Connection Pooler"],
+                flow: ["Application Pod", "HA PgBouncer Service", "PostgreSQL Primary Pod", "Replicated Secondary Pod"]
+            },
+            "t3_0200": {
+                time: "02:00 PM",
+                track: "Track 3",
+                title: "Securing the Wire: Inflight Encryption in Kubernetes from First Principles",
+                speaker: "Didi Yudha Perwira & Irwan Shofwan (GoTo Financial)",
+                category: "Security",
+                level: "Intermediate",
+                abstract: "Go from fundamental mathematical cryptography up to setting up automated, performant host-to-host and pod-to-pod network encryption layers.",
+                insights: [
+                    "<strong>First-Principles Encryption:</strong> Analyzing symmetric/asymmetric cycles to choose fast cryptography patterns.",
+                    "<strong>Kernel Overlay Encryptions:</strong> Deploying IPSec or WireGuard within container network plugins to encrypt cluster traffic seamlessly.",
+                    "<strong>Let's Encrypt Integration:</strong> Orchestrating zero-maintenance certificate issuing via cert-manager operators."
+                ],
+                techStack: ["WireGuard", "IPsec Tunnels", "cert-manager", "Vault CA Engine"],
+                flow: ["Unencrypted App Packet", "CNI Encryption Hook (WireGuard)", "Encrypted Host Network Tunnel", "Decrypt CNI Receiver"]
+            },
+            // 02:30 PM
+            "t1_0230": {
+                time: "02:30 PM",
+                track: "Track 1",
+                title: "Network monitoring on Kubernetes with Cilium and Hubble",
+                speaker: "Lim Chin Huat Andy",
+                category: "Observability",
+                level: "Intermediate",
+                abstract: "Leverage the Linux kernel eBPF layer to monitor, diagnose, and visualize live pod connection problems, packet drops, and app latencies with no proxy sidecars.",
+                insights: [
+                    "<strong>Direct Kernel Monitoring:</strong> Access network details directly within Linux without modifying application code.",
+                    "<strong>Visualizing Dropped Packets:</strong> Hubble tracking highlights exact drop locations and matching policy rules instantly.",
+                    "<strong>Prometheus Telemetry:</strong> Generating deep L4/L7 metric sets with practically zero impact on system overhead."
+                ],
+                techStack: ["Cilium CNI Engine", "eBPF", "Hubble API", "Prometheus Metrics"],
+                flow: ["Application Pod packet", "Cilium Host-space eBPF Probe", "Hubble Flow Collector", "Grafana Latency Dashboard"]
+            },
+            "t2_0230": {
+                time: "02:30 PM",
+                track: "Track 2",
+                title: "Managing a collector fleet? Easy with OpAMP",
+                speaker: "Adam Gardner (Dynatrace / CNCF)",
+                category: "Observability",
+                level: "Beginner",
+                abstract: "Discover how to simplify massive deployments of OpenTelemetry collector fleets securely using the CNCF Open Agent Management Protocol standard.",
+                insights: [
+                    "<strong>OpAMP Integration:</strong> Standardizing configuration pushes, health statuses, and dynamic updates for distributed telemetry agents.",
+                    "<strong>Dynamic Configurations:</strong> Pushing updated filter pipelines, trace limits, and keys to collectors safely.",
+                    "<strong>Health Monitoring:</strong> Tracking agent memory and performance limits to maintain telemetry flow stability."
+                ],
+                techStack: ["OpAMP protocol", "OpenTelemetry Collector", "Kubernetes daemonset", "Prometheus Metrics"],
+                flow: ["SRE Config Change", "OpAMP Central Server", "OTel Collector Agent", "Live Metric Processing Pipe"]
+            },
+            "t3_0230": {
+                time: "02:30 PM",
+                track: "Track 3",
+                title: "Why is it always DNS?: Rethinking & Engineering Node-Level DNS Resolution in Kubernetes",
+                speaker: "Ankur Singh & Shaheen Sayyed (Red Hat)",
+                category: "Platform Engineering",
+                level: "Intermediate",
+                abstract: "Deep-dive into CoreDNS performance limits. Uncover system faults like conntrack packet drops, and construct a highly stable NodeLocal DNSCache layout.",
+                insights: [
+                    "<strong>DNS conntrack racing:</strong> High concurrent lookups provoke UDP drop-outs; resolve this via caching on worker nodes.",
+                    "<strong>NodeLocal DNSCache:</strong> Running DNS daemonsets directly on worker hosts eliminates costly cluster routing hops.",
+                    "<strong>Upstream Refactoring:</strong> Fine-tuning timeout rules, resolver profiles, and cache lifetimes inside CoreDNS."
+                ],
+                techStack: ["CoreDNS Operator", "NodeLocal DNSCache", "IPVS Routing Rules", "Red Hat OpenShift"],
+                flow: ["App Container Lookup", "NodeLocal Cache daemon (169.254.20.10)", "Upstream CoreDNS Service", "External Resolvers"]
+            },
+            // 03:30 PM
+            "t1_0330": {
+                time: "03:30 PM",
+                track: "Track 1",
+                title: "[Sponsored] Killing the OOMKill: How MQE Cut Querier Peak Memory by 92%",
+                speaker: "Jon Kartago Lamida (Grafana Labs)",
+                category: "Observability",
+                level: "Intermediate",
+                abstract: "How Grafana Labs engineers successfully eliminated Prometheus querier pod OOM-Kills by refactoring distributed analytics flows in Mimir and Cortex.",
+                insights: [
+                    "<strong>High-Cardinality Memory Exhaustion:</strong> Queries pulling millions of historical data streams into memory concurrently cause instant OOM crashes.",
+                    "<strong>Mimir Query Engine (MQE) Streaming:</strong> Stream query chunks chronologically instead of compiling full arrays before processing.",
+                    "<strong>Parallel Partition Schemes:</strong> Dividing intensive dashboard queries into tiny concurrent chunk evaluations."
+                ],
+                techStack: ["Grafana Mimir", "MQE", "Prometheus DB", "Go GC Configs"],
+                flow: ["Grafana Dashboard Request", "MQE Coordinator", "Distributed Query Streamers", "Mimir Chunk Store (S3)"]
+            },
+            "t2_0330": {
+                time: "03:30 PM",
+                track: "Track 2",
+                title: "Post-Mortem of a Container Breach: Forensics in the Cloud Native Era",
+                speaker: "Saurabh Mishra",
+                category: "Security",
+                level: "Intermediate",
+                abstract: "Trace an ongoing container security breach live. Extract real-time syscall trails, isolate compromised host namespaces, and establish automated runtime blockers.",
+                insights: [
+                    "<strong>Common Exploitation Lines:</strong> HostPath mount misconfigurations or unpatched container dependencies granting shell exits.",
+                    "<strong>Syscall Tracking:</strong> Identifying bad execution chains in real-time via Falco trace monitors.",
+                    "<strong>Active Containment:</strong> Dynamically isolates malicious pods via CNI policies while gathering forensic memory snapshots."
+                ],
+                techStack: ["Falco Syscall Audits", "Cilium Tetragon", "Containerd CLI", "K8s Network Policies"],
+                flow: ["Vulnerable Pod Exploit", "Syscall Triggers Tetragon Probe", "Falco Threat Alert", "CNI Isolation Policy"]
+            },
+            "t3_0330": {
+                time: "03:30 PM",
+                track: "Track 3",
+                title: "Building a \"Continuous Verification\" Pipeline for Sovereign Cloud Security",
+                speaker: "Rob Kenefeck (ControlPlane)",
+                category: "Security",
+                level: "Intermediate",
+                abstract: "Move past static container scans. Establish dynamic runtime verification pipelines to validate image signatures and compute integrity continuously in sovereign cloud systems.",
+                insights: [
+                    "<strong>Cryptographic Signatures:</strong> Cosign and in-toto verify full software trace records dynamically.",
+                    "<strong>Continuous Admission Auditing:</strong> Kyverno validation checking container signatures continuously during runtime.",
+                    "<strong>Isolated Cluster Audits:</strong> Structuring compliance automation frameworks specifically for sovereign, disconnected network zones."
+                ],
+                techStack: ["Cosign Keyless Signing", "in-toto Attestation", "Kyverno Admission Controllers", "Open Policy Agent"],
+                flow: ["Pipeline Build Artifact", "Cosign Metadata Sign", "K8s Admission Webhook Validation", "Runtime Attestation Check"]
+            },
+            // 04:00 PM
+            "t1_0400": {
+                time: "04:00 PM",
+                track: "Track 1",
+                title: "Streamlining Upstream/Downstream Pipelines with Argo Workflows on Kubernetes",
+                speaker: "Shahril Kamaruzzaman (Bank Islam)",
+                category: "Data Processing + Storage",
+                level: "Beginner",
+                abstract: "Explore declarative orchestration patterns to manage heavy data pipelines, ML workflows, and complex GitOps tasks natively in Kubernetes using Argo.",
+                insights: [
+                    "<strong>Declarative DAG Orchestration:</strong> Define multi-step pipelines as standard Kubernetes resources.",
+                    "<strong>Artifact & Param Routing:</strong> Share configuration data, credentials, and artifact files safely across step runners.",
+                    "<strong>Reliable Retries:</strong> Configure intelligent auto-retries, step timeout parameters, and smart autoscaling configurations."
+                ],
+                techStack: ["Argo Workflows Core", "Argo Events", "S3 / MinIO Storage", "Keda Scale Controller"],
+                flow: ["Trigger Pipeline Event", "Argo Workflow Engine", "Parallel Runner Pods", "S3 Storage Upload"]
+            },
+            "t2_0400": {
+                time: "04:00 PM",
+                track: "Track 2",
+                title: "You're Running Prometheus the Wrong Way. Let Thanos Fix It.",
+                speaker: "Ricardo Gonzalez",
+                category: "Observability",
+                level: "Intermediate",
+                abstract: "A highly practical engineering talk on scaling Prometheus. Leverage Thanos to offload metrics storage to cheap object storage while enabling a global query interface.",
+                insights: [
+                    "<strong>Thanos Sidecar Pattern:</strong> Upload metrics blocks automatically from Prometheus nodes to object storage.",
+                    "<strong>Global Deduplication:</strong> Thanos Querier unites and deduplicates metrics logs across distinct clusters.",
+                    "<strong>Downsampling Historical Data:</strong> Thanos Compactor shrinks large historical data archives efficiently."
+                ],
+                techStack: ["Prometheus Server", "Thanos Sidecar", "Thanos Querier Engine", "Object Storage (S3)"],
+                flow: ["Prometheus Metrics Generation", "Thanos Sidecar Upload", "Object Storage (S3)", "Thanos Global Querier"]
+            },
+            "t3_0400": {
+                time: "04:00 PM",
+                track: "Track 3",
+                title: "[Sponsored] Valkey on Kubernetes: High-Performance, Low-Latency Deployments for Scalable Clusters",
+                speaker: "Roberto Luna Rojas & Nigel Brown",
+                category: "Platform Engineering",
+                level: "Intermediate",
+                abstract: "A deep dive into Valkey—the open-source high-performance key-value database project. Build highly scalable, resilient database pools in cloud-native environments.",
+                insights: [
+                    "<strong>High-Performance Deploys:</strong> Orchestrating sub-millisecond Valkey caches natively in Kubernetes.",
+                    "<strong>Automated Failover Routines:</strong> Dynamic Operators auto-detect leader faults and trigger seamless failovers under 3 seconds.",
+                    "<strong>Network Optimization:</strong> Fine-tuning connection boundaries and cross-AZ sync pathways."
+                ],
+                techStack: ["Valkey Database", "K8s Valkey Operator", "StatefulSets", "StorageClasses"],
+                flow: ["App Cache Lookup", "Service Ingress Path", "Valkey Master replica", "Valkey Replica Nodes"]
+            },
+            // 04:30 PM
+            "t1_0430": {
+                time: "04:30 PM",
+                track: "Track 1",
+                title: "Over-Engineering Home-Operations: Self-Hosting with Kubernetes",
+                speaker: "Chai Jun Kin (Cloudjur)",
+                category: "Platform Engineering",
+                level: "Intermediate",
+                abstract: "Step away from cloud providers! Learn the absolute joy and challenges of deploying a private bare-metal Kubernetes cluster inside your own living room.",
+                insights: [
+                    "<strong>Bare-Metal Setup:</strong> Constructing lightweight K3s or Talos OS clusters on low-cost hardware like NUC mini-PCs.",
+                    "<strong>GitOps for Home-Ops:</strong> Managing home automation apps (Home Assistant, Plex, private databases) securely using FluxCD or ArgoCD.",
+                    "<strong>Securing External Access:</strong> Utilizing secure Cloudflare Tunnels and cert-manager to expose personal dashboards safely."
+                ],
+                techStack: ["Talos OS / K3s", "ArgoCD", "Cloudflare Tunnels", "Longhorn storage"],
+                flow: ["Living Room Server", "Local Talos OS Node", "ArgoCD Orchestrator", "Secure Local App Services"]
+            },
+            "t3_0430": {
+                time: "04:30 PM",
+                track: "Track 3",
+                title: "[Sponsored Session] K8s Is Hard Enough: Valkey Data Structures That Replace Your Overengineered Stack",
+                speaker: "Roberto Luna Rojas",
+                category: "AI/ML",
+                level: "Intermediate",
+                abstract: "Don't bloat your cluster namespaces with too many dedicated databases. See how Valkey's specialized data structures (such as HyperLogLog and streaming) replace resource-heavy, separate systems.",
+                insights: [
+                    "<strong>Tool Consolidation:</strong> Minimizing deployment overhead by routing message queues and search indexes through a single Valkey system.",
+                    "<strong>Streamlined Configurations:</strong> Reduces namespace complexity by dropping heavy dependency engines.",
+                    "<strong>In-Memory Efficiency:</strong> Executing high-speed message queues and rate limits directly in memory with minimal footprint."
+                ],
+                techStack: ["Valkey Data Engine", "TimeSeries Extensions", "HyperLogLog Structures", "Kubernetes"],
+                flow: ["Product Ingress Event", "Valkey Stream queue", "Background worker pods", "Prometheus Trackers"]
+            }
+        };
+
+        // Parallel schedule time slots mapping
+        const TIMELINE_SLOTS = [
+            { time: "10:45 AM", t1: "t1_1045", t2: "t2_1045", t3: "t3_1045" },
+            { time: "11:15 AM", t1: "t1_1115", t2: "t2_1115", t3: "t3_1115" },
+            { time: "11:45 AM", t1: "t1_1145", t2: null,      t3: "t3_1145" },
+            { time: "01:30 PM", t1: "t1_0130", t2: "t2_0130", t3: "t3_0130" },
+            { time: "02:00 PM", t1: "t1_0200", t2: "t2_0200", t3: "t3_0200" },
+            { time: "02:30 PM", t1: "t1_0230", t2: "t2_0230", t3: "t3_0230" },
+            { time: "03:30 PM", t1: "t1_0330", t2: "t2_0330", t3: "t3_0330" },
+            { time: "04:00 PM", t1: "t1_0400", t2: "t2_0400", t3: "t3_0400" },
+            { time: "04:30 PM", t1: "t1_0430", t2: null,      t3: "t3_0430" }
+        ];
+
+        // Global colors map for Tracks
+        const TRACK_THEMES = {
+            "Track 1": { bg: "bg-blue-500/10", border: "border-blue-500/30", text: "text-blue-400", badge: "bg-blue-500/20 text-blue-300" },
+            "Track 2": { bg: "bg-emerald-500/10", border: "border-emerald-500/30", text: "text-emerald-400", badge: "bg-emerald-500/20 text-emerald-300" },
+            "Track 3": { bg: "bg-purple-500/10", border: "border-purple-500/30", text: "text-purple-400", badge: "bg-purple-500/20 text-purple-300" }
+        };
+
+        const LEVEL_CLASSES = {
+            "Beginner": "bg-sky-500/10 text-sky-400 border-sky-500/20",
+            "Intermediate": "bg-amber-500/10 text-amber-400 border-amber-500/20",
+            "Advanced": "bg-rose-500/10 text-rose-400 border-rose-500/20"
+        };
+
+        let selectedSessionId = null;
+
+        // Populate Timeline view dynamically
+        function renderTimeline() {
+            const container = document.getElementById("timelineContainer");
+            container.innerHTML = "";
+
+            const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+            const trackFilter = document.getElementById("trackFilter").value;
+            const levelFilter = document.getElementById("levelFilter").value;
+
+            TIMELINE_SLOTS.forEach(slot => {
+                // Determine active sessions in this slot based on filters
+                let t1Session = SESSIONS[slot.t1];
+                let t2Session = SESSIONS[slot.t2];
+                let t3Session = SESSIONS[slot.t3];
+
+                // Apply filters to slot level variables
+                const showT1 = t1Session && (trackFilter === "All" || trackFilter === "Track 1") && (levelFilter === "All" || t1Session.level === levelFilter) && (t1Session.title.toLowerCase().includes(searchQuery) || t1Session.speaker.toLowerCase().includes(searchQuery) || t1Session.techStack.join(" ").toLowerCase().includes(searchQuery));
+                const showT2 = t2Session && (trackFilter === "All" || trackFilter === "Track 2") && (levelFilter === "All" || t2Session.level === levelFilter) && (t2Session.title.toLowerCase().includes(searchQuery) || t2Session.speaker.toLowerCase().includes(searchQuery) || t2Session.techStack.join(" ").toLowerCase().includes(searchQuery));
+                const showT3 = t3Session && (trackFilter === "All" || trackFilter === "Track 3") && (levelFilter === "All" || t3Session.level === levelFilter) && (t3Session.title.toLowerCase().includes(searchQuery) || t3Session.speaker.toLowerCase().includes(searchQuery) || t3Session.techStack.join(" ").toLowerCase().includes(searchQuery));
+
+                // If nothing matches filters in this slot, skip rendering the slot entirely
+                if (!showT1 && !showT2 && !showT3) return;
+
+                const slotEl = document.createElement("div");
+                slotEl.className = "bg-slate-900/60 rounded-xl p-4 border border-slate-800 space-y-4";
+                
+                // Header of Slot
+                const headerEl = document.createElement("div");
+                headerEl.className = "flex items-center justify-between border-b border-slate-800 pb-2 text-slate-400 text-xs";
+                headerEl.innerHTML = `
+                    <span class="font-bold flex items-center gap-1"><span class="material-icons text-sm text-slate-500">schedule</span> ${slot.time} (30 min slot)</span>
+                    <span class="text-slate-500">Parallel Sessions</span>
+                `;
+                slotEl.appendChild(headerEl);
+
+                // Grid for dynamic parallel tracks
+                const gridEl = document.createElement("div");
+                gridEl.className = "grid grid-cols-1 md:grid-cols-3 gap-3";
+
+                // Function to build individual session card markup
+                const appendCard = (sess, sessId) => {
+                    const theme = TRACK_THEMES[sess.track];
+                    const activeClass = selectedSessionId === sessId ? "ring-2 ring-blue-500 border-transparent bg-slate-800" : "hover:bg-slate-850";
+                    const isSponsored = sess.title.startsWith("[Sponsored");
+                    const titleClean = sess.title.replace(/^\[Sponsored\s*Session\]|^\[Sponsored\]/i, "").trim();
+
+                    const card = document.createElement("div");
+                    card.className = `p-3 rounded-lg border cursor-pointer transition-all ${theme.bg} ${theme.border} ${activeClass} flex flex-col justify-between h-full`;
+                    card.onclick = () => selectSession(sessId);
+
+                    card.innerHTML = `
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between text-[10px]">
+                                <span class="font-bold tracking-wider uppercase ${theme.text}">${sess.track}</span>
+                                <span class="px-1.5 py-0.2 rounded border ${LEVEL_CLASSES[sess.level]}">${sess.level}</span>
+                            </div>
+                            <h4 class="text-xs font-bold text-white line-clamp-2 leading-snug">
+                                ${isSponsored ? `<span class="bg-amber-500/15 text-amber-400 px-1 rounded text-[9px] font-bold mr-1 border border-amber-500/20">SPONSOR</span>` : ""}
+                                ${titleClean}
+                            </h4>
+                        </div>
+                        <div class="mt-3 flex items-center justify-between text-[10px] text-slate-400">
+                            <span class="truncate max-w-[120px]"><span class="material-icons text-[10px] align-middle">person</span> ${sess.speaker.split("(")[0]}</span>
+                            <span class="code-font bg-slate-950 px-1 py-0.5 rounded border border-slate-800/80">${sess.techStack[0]}</span>
+                        </div>
+                    `;
+                    gridEl.appendChild(card);
+                };
+
+                // Add active sessions to track-grid
+                if (showT1) appendCard(t1Session, slot.t1);
+                else if (trackFilter === "All") gridEl.appendChild(createEmptyTrackSlot("Track 1"));
+
+                if (showT2) appendCard(t2Session, slot.t2);
+                else if (trackFilter === "All") gridEl.appendChild(createEmptyTrackSlot("Track 2"));
+
+                if (showT3) appendCard(t3Session, slot.t3);
+                else if (trackFilter === "All") gridEl.appendChild(createEmptyTrackSlot("Track 3"));
+
+                slotEl.appendChild(gridEl);
+                container.appendChild(slotEl);
+            });
+        }
+
+        function createEmptyTrackSlot(trackName) {
+            const empty = document.createElement("div");
+            empty.className = "hidden md:flex p-3 rounded-lg border border-dashed border-slate-800 bg-slate-950/20 items-center justify-center text-center text-[10px] text-slate-600 h-full select-none";
+            empty.innerHTML = `<span>${trackName}<br>No matching session</span>`;
+            return empty;
+        }
+
+        // Handle selection of a session
+        function selectSession(sessId) {
+            selectedSessionId = sessId;
+            const sess = SESSIONS[sessId];
+            if (!sess) return;
+
+            // Render updated selection state on timeline
+            renderTimeline();
+
+            // Hide Idle element
+            document.getElementById("inspector-idle").classList.add("hidden");
+            const content = document.getElementById("inspector-content");
+            content.classList.remove("hidden");
+
+            // Fill text values in Inspector
+            document.getElementById("insTitle").textContent = sess.title;
+            document.getElementById("insSpeaker").innerHTML = `<span class="material-icons text-sm">person</span> ${sess.speaker}`;
+            document.getElementById("insTime").textContent = sess.time + " (30m)";
+            document.getElementById("insCategory").textContent = sess.category;
+            document.getElementById("insAbstract").textContent = sess.abstract;
+
+            // Format dynamic Track and Level badges
+            const trackTheme = TRACK_THEMES[sess.track];
+            const trackBadge = document.getElementById("insTrackBadge");
+            trackBadge.className = `px-2.5 py-1 text-xs font-bold rounded-full ${trackTheme.badge}`;
+            trackBadge.textContent = sess.track;
+
+            const lvlBadge = document.getElementById("insLevelBadge");
+            lvlBadge.className = `px-2.5 py-1 text-xs font-bold rounded-lg border ${LEVEL_CLASSES[sess.level]}`;
+            lvlBadge.textContent = sess.level;
+
+            // Render key takeaways list
+            const insightsContainer = document.getElementById("insInsights");
+            insightsContainer.innerHTML = "";
+            sess.insights.forEach(ins => {
+                const li = document.createElement("li");
+                li.className = "flex items-start gap-2 text-slate-300 leading-normal bg-slate-850/40 p-2.5 rounded-lg border border-slate-800/60";
+                li.innerHTML = `
+                    <span class="material-icons text-blue-400 text-sm mt-0.5 shrink-0">check_circle</span>
+                    <div>${ins}</div>
+                `;
+                insightsContainer.appendChild(li);
+            });
+
+            // Draw Dynamic Architecture Topology Graph
+            drawArchitectureTopology(sess);
+
+            // Auto-scroll inspector into view on small screens
+            if (window.innerWidth < 1024) {
+                document.getElementById("inspector-pane").scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Draw an interactive architectural diagram layout inside the inspector
+        function drawArchitectureTopology(sess) {
+            const blueprint = document.getElementById("insBlueprint");
+            blueprint.innerHTML = "";
+
+            // Create step wrapper flex element
+            const wrapper = document.createElement("div");
+            wrapper.className = "w-full flex flex-col items-center justify-center space-y-4 py-2 relative z-10 text-xs";
+
+            // Loop to structure execution pipelines with arrow bridges
+            for (let i = 0; i < sess.flow.length; i++) {
+                const step = document.createElement("div");
+                step.className = "flex items-center gap-2 bg-slate-900 border border-slate-700/80 px-3 py-2 rounded-lg text-slate-100 font-medium text-center w-full max-w-[280px] shadow-lg shadow-slate-950/40 relative";
+                
+                // Step sequence counter
+                const seq = document.createElement("span");
+                seq.className = "bg-blue-500 text-slate-950 text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shrink-0";
+                seq.textContent = i + 1;
+
+                const stepText = document.createElement("span");
+                stepText.className = "truncate flex-1";
+                stepText.textContent = sess.flow[i];
+
+                step.appendChild(seq);
+                step.appendChild(stepText);
+                wrapper.appendChild(step);
+
+                // Render dynamic down-arrows connecting blocks
+                if (i < sess.flow.length - 1) {
+                    const arrow = document.createElement("span");
+                    arrow.className = "material-icons text-slate-600 text-sm select-none py-1";
+                    arrow.textContent = "arrow_downward";
+                    wrapper.appendChild(arrow);
+                }
+            }
+
+            // Tech Stack pills row
+            const techPillsTitle = document.createElement("div");
+            techPillsTitle.className = "text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-4";
+            techPillsTitle.textContent = "Supporting CNCF Stack";
+            
+            const pillsRow = document.createElement("div");
+            pillsRow.className = "flex flex-wrap gap-1.5 justify-center mt-1";
+            sess.techStack.forEach(tech => {
+                const pill = document.createElement("span");
+                pill.className = "bg-slate-800 text-blue-300 border border-slate-700/60 px-2 py-0.5 rounded text-[10px] code-font font-medium";
+                pill.textContent = tech;
+                pillsRow.appendChild(pill);
+            });
+
+            blueprint.appendChild(wrapper);
+            blueprint.appendChild(techPillsTitle);
+            blueprint.appendChild(pillsRow);
+        }
+
+        // Attach event listeners for real-time filtering updates
+        document.getElementById("searchInput").addEventListener("input", renderTimeline);
+        document.getElementById("trackFilter").addEventListener("change", renderTimeline);
+        document.getElementById("levelFilter").addEventListener("change", renderTimeline);
+
+        // Initial launch rendering
+        renderTimeline();
+    </script>
+</body>
+</html>
