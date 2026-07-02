@@ -721,11 +721,6 @@
             const categories = getSortedUniqueCategories();
             const favoriteCount = favorites.size;
             const totalCount = Object.keys(SESSIONS).length;
-            const trackCounts = { "Track 1": 0, "Track 2": 0, "Track 3": 0 };
-            Object.values(SESSIONS).forEach(sess => {
-                trackCounts[sess.track] += 1;
-            });
-
             summary.innerHTML = `
                 <div class="rounded-3xl border border-slate-800 bg-slate-900/80 p-4 shadow-lg shadow-slate-950/20">
                     <div class="text-slate-400 text-xs uppercase tracking-widest mb-3">Schedule at a glance</div>
@@ -751,8 +746,6 @@
             container.innerHTML = "";
 
             const searchQuery = document.getElementById("searchInput").value.toLowerCase();
-            const trackFilter = document.getElementById("trackFilter").value;
-            const levelFilter = document.getElementById("levelFilter").value;
             const categoryFilter = document.getElementById("categoryFilter").value;
             const favoritesOnly = document.getElementById("favoriteOnlyBtn").dataset.active === "true";
 
@@ -846,8 +839,6 @@
         function applyTheme(theme) {
             const root = document.body;
             const searchQuery = document.getElementById("searchInput").value.toLowerCase();
-            const trackFilter = document.getElementById("trackFilter").value;
-            const levelFilter = document.getElementById("levelFilter").value;
             const categoryFilter = document.getElementById("categoryFilter").value;
             const favoritesOnly = document.getElementById("favoriteOnlyBtn").dataset.active === "true";
 

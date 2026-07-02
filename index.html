@@ -176,11 +176,7 @@
             <div id="inspector-content" class="hidden flex-1 flex flex-col h-full min-h-0">
                 <div class="p-6 border-b border-slate-800">
                         <div class="flex items-center justify-between gap-3 mb-3">
-                        <div class="flex items-center gap-2">
-                            <span id="insTrackBadge" class="px-2.5 py-1 text-xs font-bold rounded-full"></span>
-                            <span id="insLevelBadge" class="px-2.5 py-1 text-xs font-bold rounded-lg border"></span>
-                        </div>
-                        <button id="insFavoriteBtn" type="button" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-800 text-slate-300 text-xs bg-slate-950/70 hover:bg-slate-900 transition">
+                                                <button id="insFavoriteBtn" type="button" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-800 text-slate-300 text-xs bg-slate-950/70 hover:bg-slate-900 transition">
                             <span class="material-icons text-sm">star_border</span>
                             Favorite
                         </button>
@@ -658,18 +654,6 @@
             { time: "04:30 PM", t1: "t1_0430", t2: null,      t3: "t3_0430" }
         ];
 
-        // Global colors map for Tracks
-        const TRACK_THEMES = {
-            "Track 1": { bg: "bg-blue-500/10", border: "border-blue-500/30", text: "text-blue-400", badge: "bg-blue-500/20 text-blue-300" },
-            "Track 2": { bg: "bg-emerald-500/10", border: "border-emerald-500/30", text: "text-emerald-400", badge: "bg-emerald-500/20 text-emerald-300" },
-            "Track 3": { bg: "bg-purple-500/10", border: "border-purple-500/30", text: "text-purple-400", badge: "bg-purple-500/20 text-purple-300" }
-        };
-
-        const LEVEL_CLASSES = {
-            "Beginner": "bg-sky-500/10 text-sky-400 border-sky-500/20",
-            "Intermediate": "bg-amber-500/10 text-amber-400 border-amber-500/20",
-            "Advanced": "bg-rose-500/10 text-rose-400 border-rose-500/20"
-        };
 
         const FAVORITES_KEY = "kcd-schedule-favorites-v1";
         const THEME_KEY = "kcd-schedule-theme-v1";
@@ -731,11 +715,6 @@
             const categories = getSortedUniqueCategories();
             const favoriteCount = favorites.size;
             const totalCount = Object.keys(SESSIONS).length;
-            const trackCounts = { "Track 1": 0, "Track 2": 0, "Track 3": 0 };
-            Object.values(SESSIONS).forEach(sess => {
-                trackCounts[sess.track] += 1;
-            });
-
             summary.innerHTML = `
                 <div class="rounded-3xl border border-slate-800 bg-slate-900/80 p-4 shadow-lg shadow-slate-950/20">
                     <div class="text-slate-400 text-xs uppercase tracking-widest mb-3">Schedule at a glance</div>
@@ -767,8 +746,6 @@
             container.innerHTML = "";
 
             const searchQuery = document.getElementById("searchInput").value.toLowerCase();
-            const trackFilter = document.getElementById("trackFilter").value;
-            const levelFilter = document.getElementById("levelFilter").value;
             const categoryFilter = document.getElementById("categoryFilter").value;
             const favoritesOnly = document.getElementById("favoriteOnlyBtn").dataset.active === "true";
 
@@ -800,7 +777,7 @@
                 headerEl.className = "flex items-center justify-between border-b border-slate-800 pb-2 text-slate-400 text-xs";
                 headerEl.innerHTML = `
                     <span class="font-bold flex items-center gap-1"><span class="material-icons text-sm text-slate-500">schedule</span> ${slot.time}</span>
-                    <span class="text-slate-500">${matches.filter(Boolean).length} active track${matches.filter(Boolean).length === 1 ? '' : 's'}</span>
+                    <span class="text-slate-500">${matches.filter(Boolean).length} active session${matches.filter(Boolean).length === 1 ? '' : 's'}</span>
                 `;
                 slotEl.appendChild(headerEl);
 
@@ -841,15 +818,15 @@
                     visibleSessions.push(sess);
                 };
 
-                slotIdMap.forEach(({id, session}, index) => {
+                slotIdMap.forEach(({id, session}) => {
                     if (!session) {
-                        if (trackFilter === "All") gridEl.appendChild(createEmptyTrackSlot(index === 0 ? "Track 1" : index === 1 ? "Track 2" : "Track 3"));
+                        gridEl.appendChild(createEmptyTrackSlot());
                         return;
                     }
-                    if (matches[index]) {
+                    if (matches[slotIdMap.indexOf(id)]) {
                         appendCard(session, id);
-                    } else if (trackFilter === "All") {
-                        gridEl.appendChild(createEmptyTrackSlot(session.track));
+                    } else {
+                        gridEl.appendChild(createEmptyTrackSlot());
                     }
                 });
 
@@ -864,8 +841,6 @@
         function applyTheme(theme) {
             const heatmapPanel = document.getElementById("heatmapPanel");
             const searchQuery = document.getElementById("searchInput").value.toLowerCase();
-            const trackFilter = document.getElementById("trackFilter").value;
-            const levelFilter = document.getElementById("levelFilter").value;
             const categoryFilter = document.getElementById("categoryFilter").value;
             const favoritesOnly = document.getElementById("favoriteOnlyBtn").dataset.active === "true";
 
@@ -986,10 +961,10 @@
             linkBtn.href = `${SESSIONIZE_BASE}#${slug}`;
         }
 
-        function createEmptyTrackSlot(trackName) {
+        function createEmptyTrackSlot() {
             const empty = document.createElement("div");
             empty.className = "hidden md:flex p-3 rounded-lg border border-dashed border-slate-800 bg-slate-950/20 items-center justify-center text-center text-[10px] text-slate-600 h-full select-none";
-            empty.innerHTML = `<span>${trackName}<br>No matching session</span>`;
+            empty.innerHTML = `<span>No session scheduled</span>`;
             return empty;
         }
 
@@ -1013,16 +988,6 @@
             document.getElementById("insTime").textContent = sess.time + " (30m)";
             document.getElementById("insCategory").textContent = sess.category;
             document.getElementById("insAbstract").textContent = sess.abstract;
-
-            // Format dynamic Track and Level badges
-            const trackTheme = TRACK_THEMES[sess.track];
-            const trackBadge = document.getElementById("insTrackBadge");
-            trackBadge.className = `px-2.5 py-1 text-xs font-bold rounded-full ${trackTheme.badge}`;
-            trackBadge.textContent = sess.track;
-
-            const lvlBadge = document.getElementById("insLevelBadge");
-            lvlBadge.className = `px-2.5 py-1 text-xs font-bold rounded-lg border ${LEVEL_CLASSES[sess.level]}`;
-            lvlBadge.textContent = sess.level;
 
             // Render key takeaways list
             const insightsContainer = document.getElementById("insInsights");
