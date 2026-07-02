@@ -131,6 +131,7 @@
         <section class="flex-1 overflow-y-auto p-4 lg:p-6 min-h-0" id="schedule-pane">
             <div class="max-w-4xl mx-auto space-y-6">
                 <div id="summaryPanel" class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"></div>
+                <div id="heatmapPanel" class="rounded-3xl border border-slate-800 bg-slate-900/80 p-4 shadow-lg shadow-slate-950/20"></div>
                 
                 <!-- Common Area Events (Static Header-like Sessions) -->
                 <div class="border-l-2 border-slate-700 pl-4 space-y-3 py-2 bg-slate-900/40 rounded-r-lg p-3">
@@ -872,11 +873,12 @@
             });
 
             renderSummary();
+            renderHeatmap();
             updateFavoriteToggleState();
         }
 
-        function applyTheme(theme) {
-            const root = document.body;
+        function renderHeatmap() {
+            const heatmapPanel = document.getElementById("heatmapPanel");
             const searchQuery = document.getElementById("searchInput").value.toLowerCase();
             const trackFilter = document.getElementById("trackFilter").value;
             const levelFilter = document.getElementById("levelFilter").value;
@@ -931,7 +933,27 @@
                 `;
             }).join("");
 
-            heatmapPanel.innerHTML = "";
+            heatmapPanel.innerHTML = `
+                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-4">
+                    <div>
+                        <div class="text-slate-400 text-xs uppercase tracking-widest mb-2">Schedule heatmap</div>
+                        <div class="text-lg font-bold text-white">Filtered coverage by time & track</div>
+                        <div class="text-slate-500 text-sm mt-1">Showing ${visibleCount} of ${totalSlots} available sessions with current filters.</div>
+                    </div>
+                    <div class="text-[11px] text-slate-500 flex flex-wrap gap-2">
+                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-950/60">Visible session</span>
+                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-950/60">Filtered session</span>
+                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-950/60">No session</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                    <div class="text-slate-400 text-[11px] uppercase tracking-widest py-2"></div>
+                    <div class="text-slate-300 text-[11px] uppercase tracking-widest py-2 text-center">Track 1</div>
+                    <div class="text-slate-300 text-[11px] uppercase tracking-widest py-2 text-center">Track 2</div>
+                    <div class="text-slate-300 text-[11px] uppercase tracking-widest py-2 text-center">Track 3</div>
+                    ${gridHtml}
+                </div>
+            `;
         }
 
         function applyTheme(theme) {
