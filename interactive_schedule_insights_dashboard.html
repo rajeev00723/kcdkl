@@ -178,12 +178,26 @@
         <aside class="w-full lg:w-[480px] border-t lg:border-t-0 lg:border-l border-slate-800 bg-slate-900 overflow-y-auto flex flex-col shrink-0" id="inspector-pane">
             
             <!-- Default Idle State (Shown when no session is selected) -->
-            <div id="inspector-idle" class="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-500">
-                <span class="material-icons text-6xl mb-4 text-slate-700 animate-pulse">explore</span>
-                <h3 class="text-lg font-medium text-slate-400 mb-2">Architectural Session Inspector</h3>
-                <p class="text-xs text-slate-500 max-w-sm">
-                    Select any parallel session card on the timeline to generate structural system blueprints, core insights, and technical takeaways.
-                </p>
+            <div id="inspector-idle" class="flex-1 flex flex-col p-6 overflow-y-auto">
+                <div class="flex flex-col items-center text-center text-slate-500 py-4">
+                    <span class="material-icons text-4xl mb-2 text-slate-700">explore</span>
+                    <h3 class="text-base font-medium text-slate-400 mb-1">Architectural Session Inspector</h3>
+                    <p class="text-xs text-slate-500 max-w-sm">
+                        Select any parallel session card on the timeline to generate structural system blueprints, core insights, and technical takeaways.
+                    </p>
+                </div>
+
+                <div class="mt-4">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Event at a Glance</h4>
+                    <div id="idleQuickFacts" class="grid grid-cols-2 gap-2"></div>
+                </div>
+
+                <div class="mt-6">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1">
+                        <span class="material-icons text-amber-400 text-sm">stars</span> Sponsored Sessions
+                    </h4>
+                    <ul id="idleSponsoredList" class="space-y-2"></ul>
+                </div>
             </div>
 
             <!-- Active Inspector Card Details -->
@@ -978,6 +992,43 @@
             linkBtn.href = `${SESSIONIZE_BASE}#${slug}`;
         }
 
+        function renderIdlePanel() {
+            const allSessions = Object.entries(SESSIONS);
+            const facts = document.getElementById("idleQuickFacts");
+            facts.innerHTML = [
+                { label: "Event date", value: "Jun 27, 2026" },
+                { label: "Total sessions", value: String(allSessions.length) },
+                { label: "Opening keynote", value: "09:30 AM" },
+                { label: "Closing ceremony", value: "05:30 PM" }
+            ].map(fact => `
+                <div class="rounded-xl border border-slate-800 bg-slate-950/60 p-3">
+                    <div class="text-[10px] text-slate-500 uppercase tracking-wider">${fact.label}</div>
+                    <div class="text-sm font-bold text-slate-200 mt-1">${fact.value}</div>
+                </div>
+            `).join("");
+
+            const sponsoredList = document.getElementById("idleSponsoredList");
+            const sponsored = allSessions.filter(([, sess]) => sess.title.startsWith("[Sponsored"));
+            sponsoredList.innerHTML = sponsored.map(([id, sess]) => {
+                const titleClean = sess.title.replace(/^\[Sponsored\s*Session\]|^\[Sponsored\]/i, "").trim();
+                const theme = TRACK_THEMES[sess.track];
+                return `
+                    <li>
+                        <button type="button" data-session-id="${id}" class="idle-sponsored-item w-full text-left p-3 rounded-lg border border-slate-800 bg-slate-950/40 hover:bg-slate-800 transition flex flex-col gap-1">
+                            <div class="flex items-center justify-between gap-2 text-[10px]">
+                                <span class="font-bold tracking-wider uppercase ${theme.text}">${sess.track} &middot; ${sess.time}</span>
+                                <span class="text-slate-500">${sess.speaker.split("(")[0]}</span>
+                            </div>
+                            <div class="text-xs font-semibold text-slate-200 leading-snug">${titleClean}</div>
+                        </button>
+                    </li>
+                `;
+            }).join("");
+            sponsoredList.querySelectorAll(".idle-sponsored-item").forEach(btn => {
+                btn.addEventListener("click", () => selectSession(btn.dataset.sessionId));
+            });
+        }
+
         function createEmptyTrackSlot(trackName) {
             const empty = document.createElement("div");
             empty.className = "hidden md:flex p-3 rounded-lg border border-dashed border-slate-800 bg-slate-950/20 items-center justify-center text-center text-[10px] text-slate-600 h-full select-none";
@@ -1115,6 +1166,7 @@
         // Initial launch rendering
         populateCategoryFilter();
         applyTheme(localStorage.getItem(THEME_KEY) || "dark");
+        renderIdlePanel();
         renderTimeline();
     </script>
 </body>
